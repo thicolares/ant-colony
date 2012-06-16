@@ -14,6 +14,7 @@ class Formiga( object ):
 	def __init__( self, grafo, cidadeInicial = 0):
 		self.caminho = []
 		self.cidades = []
+		self.caminhos = []
 		self.cidadeAtual = ''
 		self.probabilidades = {}
 		self.grafo = grafo

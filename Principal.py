@@ -70,6 +70,8 @@ for i in range(QFE):
 	fE = Formiga(g)
 	formigasElitistas.append(fE)
 
+tamPool 		= 5		# Tamanho do pool 1 + 4
+
 # Resultados
 menorCusto 		= 9999999999
 menorCaminho	= []
@@ -80,11 +82,25 @@ for bli in range(cmd.var['t']):
 	M = 9999999
 	P = 0
 	geral = 0
+	restaCidades = g.getQtdNos() # Total de Cidades - Cidade Inicial
 	
 	for k in range(g.getQtdNos()):
-		formigas[k].iniciaRota()
-		for w in range(0,g.getQtdNos()-1):			
-			formigas[k].proximaCidade()	
+
+		restaCidades--1; # Exclui a cidade atual
+		for m in range(0,restaCidades):
+			
+			formigas[k].iniciaRota() # TODO Pega um aleatório, diferente de algum nó presente em caminhos
+
+			# Range: Se g.getQtdNos() < 4 --> 4 - g.getQtdNos(), senão --> 4
+			if restaCidades > tamPool:
+				tamCaminho = tamPool
+			else:
+				tamCaminho = tamPool - restaCidades
+			
+			# Percorre o caminho pro pool
+			for n in range(0,tamCaminho):
+				formigas[k].proximaCidade()
+
 		formigas[k].finalizaRota()
 		formigas[k].calculaRota()
 		if formigas[k].custoAtual < menorCusto:

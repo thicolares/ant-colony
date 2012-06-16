@@ -24,6 +24,7 @@ import time
 #Arquivos
 from Grafo import *
 from Formiga import *
+#from Caminho import *
 from NumerosAleatorios import *
 from Cmd import *
 
@@ -70,8 +71,6 @@ for i in range(QFE):
 	fE = Formiga(g)
 	formigasElitistas.append(fE)
 
-tamPool 		= 5		# Tamanho do pool 1 + 4
-
 # Resultados
 menorCusto 		= 9999999999
 menorCaminho	= []
@@ -82,35 +81,43 @@ for bli in range(cmd.var['t']):
 	M = 9999999
 	P = 0
 	geral = 0
-	restaCidades = g.getQtdNos() # Total de Cidades - Cidade Inicial
+	g.setRestaCidades(g.getQtdNos())
+	k = 0
+	# for k in range(g.getQtdNos()): # @todo Pega a próxima cidade 
 	
-	for k in range(g.getQtdNos()):
+	while g.getRestaCidades() > 0: # TODO Pega um aleatório, diferente de algum nó presente em caminhos
+		
+		g.setRestaCidades(g.getRestaCidades() - 1); # Exclui a cidade atual
+		
+		for m in range(0,g.getRestaCidades()):
 
-		restaCidades--1; # Exclui a cidade atual
-		for m in range(0,restaCidades):
+			formigas[k].iniciaRota()
 			
-			formigas[k].iniciaRota() # TODO Pega um aleatório, diferente de algum nó presente em caminhos
-
 			# Range: Se g.getQtdNos() < 4 --> 4 - g.getQtdNos(), senão --> 4
-			if restaCidades > tamPool:
-				tamCaminho = tamPool
+			if g.getRestaCidades() > g.getTamPool():
+				tamCaminho = g.getTamPool()
 			else:
-				tamCaminho = tamPool - restaCidades
+				tamCaminho = g.getTamPool() - g.getRestaCidades()
 			
 			# Percorre o caminho pro pool
 			for n in range(0,tamCaminho):
 				formigas[k].proximaCidade()
 
-		formigas[k].finalizaRota()
-		formigas[k].calculaRota()
-		if formigas[k].custoAtual < menorCusto:
-			menorCusto		= formigas[k].custoAtual
-			menorCaminho 	= formigas[k].caminho				
-		somaCustos += formigas[k].custoAtual 
+			formigas[k].calculaRota() # calcula o custo do caminho e colocar
+			formigas[k].finalizaRota() # atualiza o caminho em caminhos
+
+		k+=1	
+
+		# if formigas[k].custoAtual < menorCusto:
+		# 	menorCusto		= formigas[k].custoAtual
+		# 	menorCaminho 	= formigas[k].caminho				
+		# somaCustos += formigas[k].custoAtual 
+
+		
 	
-	for k in range(g.getQtdNos()):
-		formigas[k].calculaDeltaTij()
-	g.depositaFeromonio()
+	# for k in range(g.getQtdNos()):
+	# 	formigas[k].calculaDeltaTij()
+	# g.depositaFeromonio()
 	"""
 	for e in range(QFE):
 		formigasElitistas[e].setCaminho(menorCaminho)

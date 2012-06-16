@@ -29,6 +29,25 @@ class Grafo( object ):
 		self.q = var['Q']
 		self.t0 = var['T0']
 
+		self.__tamPool = 5		# Tamanho do pool 1 + 4
+		self.__restaCidades = 0
+
+	# Tamanho do pool / set / property
+	def getTamPool( self ):
+		return self.__tamPool
+	def setTamPool( self, tamPool ):
+		self.__tamPool = tamPool
+
+	# tamPool = property(getTamPool, setTamPool)
+
+	# Tamanho do RestaCidades / set / property
+	def getRestaCidades( self ):
+		return self.__restaCidades 
+	def setRestaCidades( self, restaCidades  ):
+		self.__restaCidades = restaCidades 
+
+	#restaCidades  = property(getRestaCidades, setRestaCidades)
+
 	def getQtdNos( self ):
 		return self.qtd_nos
 

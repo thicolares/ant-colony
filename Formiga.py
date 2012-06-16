@@ -5,6 +5,7 @@ from random import *
 from copy import *
 from sys import *
 from Grafo import *
+from Caminho import *
 import time
 
 class Formiga( object ):
@@ -13,8 +14,8 @@ class Formiga( object ):
 	# retira das cidades a inicial
 	def __init__( self, grafo, cidadeInicial = 0):
 		self.caminho = []
-		self.cidades = []
 		self.caminhos = []
+		self.cidades = []
 		self.cidadeAtual = ''
 		self.probabilidades = {}
 		self.grafo = grafo
@@ -49,7 +50,8 @@ class Formiga( object ):
 		rn = random() 
 		cidadeI = self.cidadeAtual
 		tiraDivisor = 0.0
-		for j in range(len(self.cidades)):			
+		
+		for j in range(len(self.cidades)):
 			cidadeJ = self.cidades[j]
 			dividendo = pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]
 			divisor = self.grafo.divisor[cidadeI] - tiraDivisor
@@ -79,19 +81,25 @@ class Formiga( object ):
 		""" Adiciona a cidade atual no comeco do caminho """
 		self.caminho = []
 		self.cidades = self.grafo.getCidadesDisponiveis()
-		self.calculaDivisores()
-		self.cidades.remove(self.cidadeAtual)
-		self.caminho.append(self.cidadeAtual)
+		
+		if not self.cidades:
+			return False
+		else:
+			self.calculaDivisores()
+			self.cidades.remove(self.cidadeAtual)
+			self.caminho.append(self.cidadeAtual)
+			return True
 
 	def finalizaRota( self ):
-		""" Adiciona a primeira cidade no fim do caminho fechar o ciclo """
+		""" Adiciona a cidade destino, workplace """
+		self.caminho.append(self.caminho)
 		self.caminho.append(self.caminho[0])
 		self.cidadeAtual = self.caminho[0]
 
 	def calculaRota( self ):
 		""" Calcula o custo da rota """
 		self.custoAtual = 0
-		for i in range(0,self.grafo.qtd_nos-1):
+		for i in range(0,self.grafo.tamPool-1):
 			self.custoAtual += self.grafo.peso[self.caminho[i]][self.caminho[i+1]]
 
 	def existeAresta( self, i, j ):		

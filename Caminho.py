@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-1 -*-;
 
-
-from copy import *
-from sys import *
-import time
-
 class Caminho( object ):
 
 	# na inicialização recebe as cidades

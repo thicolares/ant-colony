@@ -5,7 +5,6 @@ from random import *
 from copy import *
 from sys import *
 from Grafo import *
-from Caminho import *
 import time
 
 class Formiga( object ):
@@ -16,17 +15,27 @@ class Formiga( object ):
 		self.caminho = []
 		self.caminhos = []
 		self.cidades = []
-		self.cidadeAtual = ''
 		self.probabilidades = {}
 		self.grafo = grafo
 		self.cidadeAtual = cidadeInicial
+		self.cidadeInicial = cidadeInicial
 		self.custoAtual = 0
+		self.custoTotal = 0
 		self.deltaTao2 = 0
 
 	# TODO não conheço sobrecarga em python! hehe
 	def setCaminho( self, caminho ):
 		self.caminho = caminho
 		self.cidadeAtual = self.caminho[0]
+
+	def getCidadeInicial( self ):
+		return self.cidadeInicial
+
+	def getCidades( self ):
+		return self.cidades
+
+	def getCustoTotal( self ):
+		return self.custoTotal
 
 	def calculaDivisores( self ):
 		alfa = 1
@@ -45,12 +54,13 @@ class Formiga( object ):
 		"""
 		alfa = self.grafo.alfa
 		beta = self.grafo.beta
-		i = self.cidadeAtual
 		somaPij = 0.0
 		rn = random() 
 		cidadeI = self.cidadeAtual
 		tiraDivisor = 0.0
-		
+
+		if not self.cidades:
+			return False
 		for j in range(len(self.cidades)):
 			cidadeJ = self.cidades[j]
 			dividendo = pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]
@@ -73,19 +83,21 @@ class Formiga( object ):
 		self.cidades.remove(cidadeJ)
 		# Diminui o divisor da contribuição pela cidade escolhida - cidade escolhida não entra mais na conta
 		tiraDivisor += pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]						
-		#self.
-		#self.testeEscolha()
+		
 		return cidadeEscolhida # cidade escolhida
 
-	def iniciaRota( self ):
+	def carregaCidades( self ):
 		""" Adiciona a cidade atual no comeco do caminho """
 		self.caminho = []
 		self.cidades = self.grafo.getCidadesDisponiveis()
-		
+
+	def iniciaRota( self ):
 		if not self.cidades:
 			return False
 		else:
 			self.calculaDivisores()
+			self.cidadeInicial = choice(self.cidades) # pega uma cidade aleatório
+			self.cidadeAtual = self.cidadeInicial
 			self.cidades.remove(self.cidadeAtual)
 			self.caminho.append(self.cidadeAtual)
 			return True
@@ -99,8 +111,9 @@ class Formiga( object ):
 	def calculaRota( self ):
 		""" Calcula o custo da rota """
 		self.custoAtual = 0
-		for i in range(0,self.grafo.tamPool-1):
+		for i in range(0,self.grafo.getTamCaminho()):
 			self.custoAtual += self.grafo.peso[self.caminho[i]][self.caminho[i+1]]
+		self.custoTotal += self.custoAtual
 
 	def existeAresta( self, i, j ):		
 		indexI = self.caminho.index(i)

@@ -30,7 +30,15 @@ class Grafo( object ):
 		self.t0 = var['T0']
 
 		self.__tamPool = 5		# Tamanho do pool 1 + 4
+		self.__tamCaminho = 0	# q pode ser no máximo = pool
 		self.__restaCidades = 0
+
+
+	# Tamanho do caminho / set / property
+	def getTamCaminho( self ):
+		return self.__tamCaminho
+	def setTamCaminho( self, tamCaminho ):
+		self.__tamCaminho = tamCaminho
 
 	# Tamanho do pool / set / property
 	def getTamPool( self ):

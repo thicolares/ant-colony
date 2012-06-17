@@ -24,9 +24,10 @@ import time
 #Arquivos
 from Grafo import *
 from Formiga import *
-#from Caminho import *
+from Caminho import *
 from NumerosAleatorios import *
 from Cmd import *
+from random import choice
 
 # Lendo parâmetros da linha de comando
 cmd = Cmd()
@@ -54,16 +55,6 @@ cidadesDisponiveis = []
 for i in range(0,g.getQtdNos()):
 	cidadesDisponiveis.append(i)
 
-# Gerador de numeros aleatorios sem repeticao
-num = NumerosAleatorios(g.getQtdNos())
-
-# Distribuição das formigas - cada um vai para uma cidade diferente
-for i in range(0,g.getQtdNos()):
-	cidadeInicial = num.numero()
-	f = Formiga(g,cidadeInicial)
-	formigas.append(f)
-
-
 # Formigas elististas
 formigasElitistas = []
 QFE = 5
@@ -74,7 +65,16 @@ for i in range(QFE):
 # Resultados
 menorCusto 		= 9999999999
 menorCaminho	= []
+
 qwe = time.time()
+
+caminhos = {} # Dicionário. Chave é relevante	#[Caminho() for i in range(g.getQtdNos())]
+melhoresCaminhos = {}
+melhorCustoTotal = 9999999999
+for i in range(0,g.getQtdNos()):
+	caminhos[str(i)] = Caminho()
+	melhoresCaminhos[str(i)] = Caminho()
+
 for bli in range(cmd.var['t']):
 	somaCustos = 0
 	c = 0.0
@@ -82,36 +82,64 @@ for bli in range(cmd.var['t']):
 	P = 0
 	geral = 0
 	g.setRestaCidades(g.getQtdNos())
-	k = 0
-	# for k in range(g.getQtdNos()): # @todo Pega a próxima cidade 
 	
-	while g.getRestaCidades() > 0: # TODO Pega um aleatório, diferente de algum nó presente em caminhos
-		
-		g.setRestaCidades(g.getRestaCidades() - 1); # Exclui a cidade atual
-		
-		for m in range(0,g.getRestaCidades()):
+	# Nova formiga
+	f = Formiga(g)
 
-			formigas[k].iniciaRota()
-			
+	# Carrega cidades
+	f.carregaCidades()
+
+	# Para cada cidade restante (disponivel)
+	for m in range(0,g.getRestaCidades()):
+	
+		# """ Escolhe aleatoriamente uma cidade como partida """
+		# cidadeInicial = randrange(g.getQtdNos())
+		# f.setCidadeInicial(cidadeInicial)
+
+		# Exclui a cidade inicial da conta
+		g.setRestaCidades(g.getRestaCidades() - 1);
+		
+		# Inicia a rota
+		if f.iniciaRota():
+
 			# Range: Se g.getQtdNos() < 4 --> 4 - g.getQtdNos(), senão --> 4
 			if g.getRestaCidades() > g.getTamPool():
-				tamCaminho = g.getTamPool()
+				g.setTamCaminho(g.getTamPool())
 			else:
-				tamCaminho = g.getTamPool() - g.getRestaCidades()
+				g.setTamCaminho(g.getTamPool() - g.getRestaCidades()) 
 			
 			# Percorre o caminho pro pool
-			for n in range(0,tamCaminho):
-				formigas[k].proximaCidade()
+			for n in range(0,g.getTamCaminho()):
+				f.proximaCidade()
+			
+			f.calculaRota() # calcula o custo do caminho e colocar
 
-			formigas[k].calculaRota() # calcula o custo do caminho e colocar
-			formigas[k].finalizaRota() # atualiza o caminho em caminhos
+			strCidadeInicial = str(f.getCidadeInicial())
+			if not caminhos[strCidadeInicial]: # já existe um caminho. Então compara o custo
+				caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
+			else:
+				if caminhos[strCidadeInicial].getCusto() > f.custoAtual:
+					caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
+				else:
+					caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
 
-		k+=1	
+		# f.finalizaRota() # atualiza o caminho em caminhos
 
-		# if formigas[k].custoAtual < menorCusto:
-		# 	menorCusto		= formigas[k].custoAtual
-		# 	menorCaminho 	= formigas[k].caminho				
-		# somaCustos += formigas[k].custoAtual 
+		if f.getCustoTotal() < melhorCustoTotal:
+			melhorCustoTotal = f.getCustoTotal()
+			melhoresCaminhos = caminhos
+	
+
+
+
+		
+
+
+
+	# if formigas[k].custoAtual < menorCusto:
+	# 	menorCusto		= formigas[k].custoAtual
+	# 	menorCaminho 	= formigas[k].caminho				
+	# somaCustos += formigas[k].custoAtual 
 
 		
 	
@@ -130,10 +158,11 @@ for bli in range(cmd.var['t']):
 	"""
 	print ('[%7d] %5d %10f') % (bli,menorCusto,somaCustos/(float)(g.getQtdNos()))
 	"""
-
 asd = time.time()
 asd = asd-qwe
 print '\n\n----------------------------------------'
 print "Tempo de execução: ", asd
-print "Melhor custo:      ", menorCusto
-print "Melhor caminho:    ", menorCaminho
+print "Melhor custo:      ", melhorCustoTotal
+print "Melhores caminho:    \n",
+for m in range(len(caminhos)):
+	print caminhos[str(m)].getCusto(), caminhos[str(m)].getCaminho()

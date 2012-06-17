@@ -10,9 +10,10 @@ class Caminho( object ):
 
 	# na inicialização recebe as cidades
 	# retira das cidades a inicial
-	def __init__( self, caminho = [], custo = 0):
+	def __init__( self, caminho = [], custo = 0, inicio = 0):
 		self.__caminho = caminho # array de vertices
 		self.__custo = custo
+		self.__inicio = inicio
 
 	# Caminho / set / property
 	def setCaminho( self, caminho ):
@@ -21,8 +22,6 @@ class Caminho( object ):
 	def getCaminho( self ):
 		return self.__caminho
 
-	caminho = property(getCaminho, setCaminho)
-
 	# Custo get / set / property
 	def setCusto( self, custo ):
 		self.__custo = custo
@@ -30,5 +29,9 @@ class Caminho( object ):
 	def getCusto( self ):
 		return self.__custo
 
-	custo = property(getCusto, setCusto)
+	# Custo get / set / property
+	def setInicio( self, inicio ):
+		self.__inicio = inicio
 
+	def getInicio( self ):
+		return self.__inicio

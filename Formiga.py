@@ -123,7 +123,7 @@ class Formiga( object ):
 	def calculaRota( self ):
 		""" Calcula o custo da rota """
 		self.custoAtual = 0
-		for i in range(0,self.grafo.getTamCaminho()):
+		for i in range(0,self.grafo.getTamCaminho() + 1): # + 1 é para pegar calcular o destino final
 			self.custoAtual += self.grafo.peso[self.caminho[i]][self.caminho[i+1]]
 		self.custoTotal += self.custoAtual
 

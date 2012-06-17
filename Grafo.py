@@ -70,15 +70,18 @@ class Grafo( object ):
 		linha = arquivo.readline()
 		self.qtd_nos = int(linha.split(" ")[0])
 
-		for p in range( 1, self.qtd_nos):
-	
-			for i in range ( 1, self.qtd_nos-p+1):
+		for p in range( 0, self.qtd_nos):
+			print 'p ***********', p
+			#for i in range ( 1, self.qtd_nos-p+1):
+			for p in range( 0, self.qtd_nos):
 				linha = arquivo.readline()
 				itens = linha.split(" ")
 				no1 = int(itens[0])
 				no2 = int(itens[1])
 				peso = int(itens[2])
 
+				print 'no1 ' , no1 , '  no2 ' , no2, '  - peso: ', peso
+				
 				if not self.peso.has_key(no1):
 					self.peso[no1] 			= {}
 					self.feromonio[no1]		= {}
@@ -95,16 +98,27 @@ class Grafo( object ):
 
 				self.deltaTao[no1][no2] 		= 0
 				self.deltaTao[no2][no1] 		= 0
-
+				
 				self.peso[no1][no2] 		= peso
 				self.feromonio[no1][no2] 	= float(self.t0)
-				self.visibilidade[no1][no2] = 1.0/peso
-				self.visibilidade_beta[no1][no2] = pow(1.0/peso,2)
+
+				# if no1 != no2:
+				if peso > 0:
+					self.visibilidade[no1][no2] = 1.0/peso
+					self.visibilidade_beta[no1][no2] = pow(1.0/peso,2)
+				else:
+					self.visibilidade[no1][no2] = 0
+					self.visibilidade_beta[no1][no2] = 0
 				
 				self.peso[no2][no1] 		= peso
 				self.feromonio[no2][no1] 	= float(self.t0)
-				self.visibilidade[no2][no1] = 1.0/peso
-				self.visibilidade_beta[no2][no1] = pow(1.0/peso,2)
+				# if no1 != no2:
+				if peso > 0:
+					self.visibilidade[no2][no1] = 1.0/peso
+					self.visibilidade_beta[no2][no1] = pow(1.0/peso,2)
+				else:
+					self.visibilidade[no2][no1] = 0
+					self.visibilidade_beta[no2][no1] = 0
 
 		
 		# Carrega uma lista com as cidades existentes

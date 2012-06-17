@@ -25,7 +25,6 @@ import time
 from Grafo import *
 from Formiga import *
 from Caminho import *
-from NumerosAleatorios import *
 from Cmd import *
 from random import choice
 

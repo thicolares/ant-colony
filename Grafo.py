@@ -2,7 +2,6 @@
 # -*- coding: iso-8859-1 -*-;
 #Importando pysco se tiver
 
-
 from copy import *
 class Grafo( object ):
 

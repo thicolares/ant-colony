@@ -51,7 +51,7 @@ class Formiga( object ):
 					divisor += pow(self.grafo.feromonio[cidadeI][cidadeL],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeL]
 			self.grafo.divisor[cidadeI] = divisor
 
-	def proximaCidade( self ):		
+	def proximaCidade( self ):
 		"""
 		Calcula probabilisticamente qual a proxima cidade a ser visitada pela formiga
 		"""
@@ -92,10 +92,15 @@ class Formiga( object ):
 		
 		return cidadeEscolhida # cidade escolhida
 
+	def ultimaCidade( self ):
+		self.caminho.append(0) # ultima cidade
+
 	def carregaCidades( self ):
 		""" Adiciona a cidade atual no comeco do caminho """
 		self.caminho = []
 		self.cidades = self.grafo.getCidadesDisponiveis()
+		self.cidades.remove(0) # Remove a cidade final, 0
+
 
 	def iniciaRota( self ):
 		if not self.cidades:

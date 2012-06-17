@@ -32,20 +32,9 @@ from random import choice
 # Lendo parâmetros da linha de comando
 cmd = Cmd()
 
-# Variáveis
-"""
-var = {}
-var['ALFA']	= 1.0 
-var['BETA']	= 5.0
-var['RO']	= 0.5
-var['Q']	= 100.0
-var['T0']	= 0.000001
-var['E']	= 5	
-"""
 # Criando o grafo
 g = Grafo(cmd.var)
 g.carregaGrafo()
-
 
 # Estrura que armaneza as formigas
 formigas = []
@@ -75,7 +64,7 @@ melhorCustoTotal = 9999999999
 for m in range(len(caminhos)):
 	print caminhos[str(m)].getCusto(), caminhos[str(m)].getCaminho()
 
-print
+
 for bli in range(cmd.var['t']):
 	somaCustos = 0
 	c = 0.0
@@ -96,8 +85,6 @@ for bli in range(cmd.var['t']):
 		# Inicia a rota
 		if f.iniciaRota():
 
-			# Range: Se g.getQtdNos() < 4 --> 4 - g.getQtdNos(), senão --> 4
-
 			if len(f.getCidades()) > g.getTamPool():
 				g.setTamCaminho(g.getTamPool())
 			else:
@@ -107,6 +94,9 @@ for bli in range(cmd.var['t']):
 			# Percorre o caminho pro pool
 			for n in range(0,g.getTamCaminho()):
 				f.proximaCidade()
+
+			# Adiciona a cidade destino
+			f.ultimaCidade()
 			
 			f.calculaRota() # calcula o custo do caminho e colocar
 

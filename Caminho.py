@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-1 -*-;
 
-from random import *
+
 from copy import *
 from sys import *
 import time

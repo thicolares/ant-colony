@@ -122,6 +122,7 @@ for bli in range(cmd.var['t']):
 					caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
 				else:
 					caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
+			print caminhos[strCidadeInicial]
 
 		# f.finalizaRota() # atualiza o caminho em caminhos
 

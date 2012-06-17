@@ -93,7 +93,7 @@ for bli in range(cmd.var['t']):
 
 			strCidadeInicial = str(f.getCidadeInicial())
 			
-			# 
+			print g.getTamCaminho() + 1
 			if strCidadeInicial not in caminhos: # já existe um caminho. Então compara o custo
 				caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
 			else:
@@ -106,7 +106,8 @@ for bli in range(cmd.var['t']):
 		melhoresCaminhos = caminhos.copy()
 
 	# Cleaning caminhos
-	# {} instancia um novo dicionario, zerado. clear() limpa o dicionário, que se for uma referência, continua sendo referência
+	# {} instancia um novo dicionario, zerado.
+	# clear() limpa o dicionário, que se for uma referência, continua sendo referência
 	caminhos = {}
 	
 duration = time.time() - start

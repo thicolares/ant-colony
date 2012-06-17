@@ -40,6 +40,9 @@ class Formiga( object ):
 	def getCustoTotal( self ):
 		return self.custoTotal
 
+	def getCustoAtual( self, custoAtual ):
+		self.custoAtual = custoAtual
+
 	def calculaDivisores( self ):
 		alfa = 1
 		for i in range(len(self.cidades)): # Para cada cidade atual			

@@ -54,8 +54,6 @@ for i in range(QFE):
 menorCusto 		= 9999999999
 menorCaminho	= []
 
-qwe = time.time()
-
 caminhos = {} # Dicionário. Chave é relevante	#[Caminho() for i in range(g.getQtdNos())]
 melhoresCaminhos = {}
 melhorCustoTotal = 9999999999
@@ -63,14 +61,8 @@ melhorCustoTotal = 9999999999
 for m in range(len(caminhos)):
 	print caminhos[str(m)].getCusto(), caminhos[str(m)].getCaminho()
 
-
+start = time.time()
 for bli in range(cmd.var['t']):
-	somaCustos = 0
-	c = 0.0
-	M = 9999999
-	P = 0
-	geral = 0
-	g.setRestaCidades(g.getQtdNos())
 	
 	# Nova formiga
 	f = Formiga(g)
@@ -117,10 +109,9 @@ for bli in range(cmd.var['t']):
 	# {} instancia um novo dicionario, zerado. clear() limpa o dicionário, que se for uma referência, continua sendo referência
 	caminhos = {}
 	
-asd = time.time()
-asd = asd - qwe
+duration = time.time() - start
 print '\n\n----------------------------------------'
-print "Tempo de execução: ", asd
+print "Tempo de execução: ", duration
 print "Melhor custo:      ", melhorCustoTotal
 print "Melhores caminho:    \n",
 for caminho in melhoresCaminhos:

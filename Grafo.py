@@ -28,7 +28,7 @@ class Grafo( object ):
 		self.q = var['Q']
 		self.t0 = var['T0']
 
-		self.__tamPool = 0		# Tamanho do pool 4 lugares no carro FORA O MOTORISTA
+		self.__tamPool = 5		# Tamanho do pool caronas + motorista. por exemplo: 5 = 1 (motorista) + 4 (caronas)
 		self.__tamCaminho = 0	# q pode ser no máximo = pool
 		self.__restaCidades = 0
 

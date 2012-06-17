@@ -76,8 +76,9 @@ for bli in range(cmd.var['t']):
 		# Inicia a rota
 		if f.iniciaRota():
 
-			if len(f.getCidades()) > g.getTamPool():
-				g.setTamCaminho(g.getTamPool())
+			# Cidades restantes = X (cidade dos caroneiros) - 1 (cidade do motorista)
+			if len(f.getCidades()) > (g.getTamPool() - 1):
+				g.setTamCaminho(g.getTamPool() - 1)
 			else:
 				g.setTamCaminho(len(f.getCidades())) 
 			# print 'cidades res: ', len(f.getCidades()), '   tam pool: ', g.getTamPool(), '   tam caminho: ', g.getTamCaminho()

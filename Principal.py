@@ -58,9 +58,6 @@ caminhos = {} # Dicionário. Chave é relevante	#[Caminho() for i in range(g.get
 melhoresCaminhos = {}
 melhorCustoTotal = 9999999999
 
-for m in range(len(caminhos)):
-	print caminhos[str(m)].getCusto(), caminhos[str(m)].getCaminho()
-
 start = time.time()
 for bli in range(cmd.var['t']):
 	
@@ -71,8 +68,8 @@ for bli in range(cmd.var['t']):
 	f.carregaCidades()
 
 	# Para cada cidade restante (disponivel)
-	for cidade in f.getCidades():
-		
+	while f.getCidades():
+
 		# Inicia a rota
 		if f.iniciaRota():
 
@@ -81,7 +78,6 @@ for bli in range(cmd.var['t']):
 				g.setTamCaminho(g.getTamPool() - 1)
 			else:
 				g.setTamCaminho(len(f.getCidades())) 
-			# print 'cidades res: ', len(f.getCidades()), '   tam pool: ', g.getTamPool(), '   tam caminho: ', g.getTamCaminho()
 			
 			# Percorre o caminho pro pool
 			for n in range(0,g.getTamCaminho()):
@@ -94,14 +90,12 @@ for bli in range(cmd.var['t']):
 
 			strCidadeInicial = str(f.getCidadeInicial())
 			
-			print g.getTamCaminho() + 1
 			if strCidadeInicial not in caminhos: # já existe um caminho. Então compara o custo
 				caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
 			else:
 				if caminhos[strCidadeInicial].getCusto() < f.custoAtual:
 					caminhos[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
 
-		# print caminhos
 	if f.getCustoTotal() < melhorCustoTotal:
 		melhorCustoTotal = f.getCustoTotal()
 		melhoresCaminhos = caminhos.copy()

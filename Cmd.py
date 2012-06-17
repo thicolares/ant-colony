@@ -16,8 +16,9 @@ class Cmd( object ):
 		<rô> Parâmetro de evaporação de feromônio
 		<Q> Parâmetro para quantidade de feromônio depositada por formiga
 		<tau_0> Quantidade inicial de feromônio nas arestas (tal_0)
-		Exemplo:
+		Exemplos:
 			python Principal.py grafo.txt 10000 1 5 0.5 100 0.000001
+			python Principal.py grafo.txt 10000 1 10 0.5 100 0.000001
 		"""
 		try:
 			self.var = {}

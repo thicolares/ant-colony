@@ -28,6 +28,9 @@ class Formiga( object ):
 		self.caminho = caminho
 		self.cidadeAtual = self.caminho[0]
 
+	def getCidadeAtual( self ):
+		return self.cidadeAtual
+
 	def getCidadeInicial( self ):
 		return self.cidadeInicial
 
@@ -61,8 +64,9 @@ class Formiga( object ):
 
 		if not self.cidades:
 			return False
-		for j in range(len(self.cidades)):
-			cidadeJ = self.cidades[j]
+		# print 'Cidades disponíveis: ',self.cidades
+		for cidade in self.cidades:        # Second Example
+			cidadeJ = cidade
 			dividendo = pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]
 			divisor = self.grafo.divisor[cidadeI] - tiraDivisor
 			if divisor != 0:
@@ -72,13 +76,15 @@ class Formiga( object ):
 			self.probabilidades[cidadeJ] = probabilidade
 			somaPij += probabilidade
 			if rn <= somaPij:
-				break		
+				break	
+
 		# Move a formiga
 		self.cidadeAtual = cidadeJ
 		# Adiciona no caminho
 		self.caminho.append(cidadeJ)
 		# Atualiza a cidade escolhida
 		cidadeEscolhida = cidadeJ
+		# print 'cidade escolhida: ', cidadeJ
 		# Remove a cidade do condjunto de cidades disponiveis
 		self.cidades.remove(cidadeJ)
 		# Diminui o divisor da contribuição pela cidade escolhida - cidade escolhida não entra mais na conta
@@ -95,6 +101,7 @@ class Formiga( object ):
 		if not self.cidades:
 			return False
 		else:
+			self.caminho = [] # limpa o caminho
 			self.calculaDivisores()
 			self.cidadeInicial = choice(self.cidades) # pega uma cidade aleatório
 			self.cidadeAtual = self.cidadeInicial

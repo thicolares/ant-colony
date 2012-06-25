@@ -16,9 +16,10 @@ class Cmd( object ):
 		<rô> Parâmetro de evaporação de feromônio
 		<Q> Parâmetro para quantidade de feromônio depositada por formiga
 		<tau_0> Quantidade inicial de feromônio nas arestas (tal_0)
+		<N> Número global de iterações a serem feitas
 		Exemplos:
-			python Principal.py grafo.txt 10000 1 5 0.5 100 0.000001
-			python Principal.py grafo.txt 10000 1 10 0.5 100 0.000001
+			python Principal.py grafo.txt 10000 1 5 0.5 100 0.000001 1
+			python Principal.py grafo.txt 10000 1 10 0.5 100 0.000001 20
 		"""
 		try:
 			self.var = {}
@@ -29,6 +30,7 @@ class Cmd( object ):
 			self.var['RO']   = float(argv[5])
 			self.var['Q']    = float(argv[6])
 			self.var['T0']   = float(argv[7])
+			self.var['N']   = int(argv[8])
 		except:
 			print self.ajuda
 			exit()

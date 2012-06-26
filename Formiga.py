@@ -15,6 +15,12 @@ class Formiga( object ):
 		self.caminho = []
 		self.caminhos = []
 		self.cidades = []
+
+		self.caminhoPool = []
+		self.iniciosPool = []
+		self.pool = []
+		self.disponiveisPool = []
+
 		self.probabilidades = {}
 		self.grafo = grafo
 		self.cidadeAtual = cidadeInicial
@@ -36,6 +42,12 @@ class Formiga( object ):
 
 	def getCidades( self ):
 		return self.cidades
+
+	def getPool( self ):
+		return self.pool
+
+	def getIniciosPool( self ):
+		return self.iniciosPool
 
 	def getCustoTotal( self ):
 		return self.custoTotal
@@ -64,9 +76,59 @@ class Formiga( object ):
 
 		if not self.cidades:
 			return False
-		# print 'Cidades disponíveis: ',self.cidades
+		
 		for cidade in self.cidades:        # Second Example
 			cidadeJ = cidade
+			dividendo = pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]
+			divisor = self.grafo.divisor[cidadeI] - tiraDivisor
+			if divisor != 0:
+				probabilidade = dividendo/divisor
+			else:
+				probabilidade = 0
+			self.probabilidades[cidadeJ] = probabilidade
+			somaPij += probabilidade
+			if rn <= somaPij:
+				break	
+
+
+		# Move a formiga
+		self.cidadeAtual = cidadeJ
+		# Adiciona no caminho
+		self.caminho.append(cidadeJ)
+		# Atualiza a cidade escolhida
+		cidadeEscolhida = cidadeJ
+		# Adiciona cidade escolhida no pool
+		self.pool.append(cidadeJ)
+		self.iniciosPool.append(cidadeJ)
+		# print 'cidade escolhida: ', cidadeJ
+		# Remove a cidade do condjunto de cidades disponiveis
+		self.cidades.remove(cidadeJ)
+		# Diminui o divisor da contribuição pela cidade escolhida - cidade escolhida não entra mais na conta
+		tiraDivisor += pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]						
+		
+		return cidadeEscolhida # cidade escolhida
+
+	def proximaCidadePool( self ):
+		"""
+		Calcula probabilisticamente qual a proxima cidade a ser visitada pela formiga
+		"""
+		alfa = self.grafo.alfa
+		beta = self.grafo.beta
+		somaPij = 0.0
+		rn = random() 
+		cidadeI = self.cidadeAtual
+		tiraDivisor = 0.0
+
+		if not self.iniciosPool:
+			return False
+		# print 'Cidades disponíveis: ',self.cidades
+
+		# lista de cidades disponíveis da pool
+		#print 'cidade atual ',cidadeI
+		self.disponiveisPool.remove(cidadeI)
+
+		for cidadePool in self.disponiveisPool:        # Second Example
+			cidadeJ = cidadePool
 			dividendo = pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]
 			divisor = self.grafo.divisor[cidadeI] - tiraDivisor
 			if divisor != 0:
@@ -81,12 +143,12 @@ class Formiga( object ):
 		# Move a formiga
 		self.cidadeAtual = cidadeJ
 		# Adiciona no caminho
-		self.caminho.append(cidadeJ)
+		self.caminhoPool.append(cidadeJ)
+
 		# Atualiza a cidade escolhida
 		cidadeEscolhida = cidadeJ
-		# print 'cidade escolhida: ', cidadeJ
-		# Remove a cidade do condjunto de cidades disponiveis
-		self.cidades.remove(cidadeJ)
+		# self.iniciosPool.remove(cidadeJ)
+		
 		# Diminui o divisor da contribuição pela cidade escolhida - cidade escolhida não entra mais na conta
 		tiraDivisor += pow(self.grafo.feromonio[cidadeI][cidadeJ],alfa)*self.grafo.visibilidade_beta[cidadeI][cidadeJ]						
 		
@@ -94,6 +156,9 @@ class Formiga( object ):
 
 	def ultimaCidade( self ):
 		self.caminho.append(0) # ultima cidade
+
+	def ultimaCidadePool( self ):
+		self.caminhoPool.append(0) # ultima cidade
 
 	def carregaCidades( self ):
 		""" Adiciona a cidade atual no comeco do caminho """
@@ -107,12 +172,32 @@ class Formiga( object ):
 			return False
 		else:
 			self.caminho = [] # limpa o caminho
+			self.pool = [] # limpa o pool
+			self.caminhoPool = []
+			self.iniciosPool = []
+			self.pool = []
+			self.disponiveisPool = []
 			self.calculaDivisores()
 			self.cidadeInicial = choice(self.cidades) # pega uma cidade aleatório
 			self.cidadeAtual = self.cidadeInicial
 			self.cidades.remove(self.cidadeAtual)
 			self.caminho.append(self.cidadeAtual)
+			self.pool.append(self.cidadeAtual)
 			return True
+
+
+	def iniciaRotaPool( self, inicioPool ):
+		if not self.pool:
+			return False
+		else:
+			self.caminhoPool = [] # limpa o caminho pool
+			self.calculaDivisores()
+			self.cidadeInicial = inicioPool # pega uma cidade do pool
+			self.cidadeAtual = self.cidadeInicial
+			self.caminhoPool.append(self.cidadeAtual)
+			self.disponiveisPool = list(self.pool)
+			return True
+
 
 	def finalizaRota( self ):
 		""" Adiciona a cidade destino, workplace """
@@ -128,6 +213,14 @@ class Formiga( object ):
 
 			#print 'no1: ',self.caminho[i],'  no2:', self.caminho[i+1] ,'peso: ', self.grafo.peso[self.caminho[i]][self.caminho[i+1]]
 			self.custoAtual += self.grafo.peso[self.caminho[i]][self.caminho[i+1]]
+		self.custoTotal += self.custoAtual
+
+	def calculaRotaPool( self ):
+		""" Calcula o custo da rota """
+		self.custoAtual = 0
+		for i in range(0,self.grafo.getTamCaminho() + 1): # + 1 é para pegar calcular o destino final
+			#print 'no1: ',self.caminho[i],'  no2:', self.caminho[i+1] ,'peso: ', self.grafo.peso[self.caminho[i]][self.caminho[i+1]]
+			self.custoAtual += self.grafo.peso[self.caminhoPool[i]][self.caminhoPool[i+1]]
 		self.custoTotal += self.custoAtual
 
 	def existeAresta( self, i, j ):		

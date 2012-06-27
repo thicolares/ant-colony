@@ -43,7 +43,7 @@ g = Grafo(cmd.var)
 g.carregaGrafo()
 
 # Criando os arquivos CVS para os resultados
-resultadoCSV = csv.writer(open(''.join([cmd.var['GRAFO'],"_",str(numLoops),".csv"]), "wb"))
+resultadoCSV = csv.writer(open(''.join([cmd.var['GRAFO'],"_",str(numLoops),"_",str(cmd.var['t']),".csv"]), "wb"))
 
 for loop in range(numLoops):
 
@@ -68,6 +68,7 @@ for loop in range(numLoops):
 	menorCaminho	= []
 
 	melhoresCaminhos = {}
+	
 	melhorCustoTotal = 9999999999
 
 	melhoresPools = []
@@ -75,7 +76,7 @@ for loop in range(numLoops):
 
 	start = time.time()
 	for bli in range(cmd.var['t']):
-		
+		print bli
 		# Nova formiga
 		f = Formiga(g)
 
@@ -90,7 +91,7 @@ for loop in range(numLoops):
 
 			caminhos = {} # Dicionário. Chave é relevante	#[Caminho() for i in range(g.getQtdNos())]
 			caminhosPool = {} # Dicionário. Chave é relevante	#[Caminho() for i in range(g.getQtdNos())]
-
+			
 			# ------------------------------------------------------
 			# Inicia a rota
 			# Primeira iteração monta o pool
@@ -117,55 +118,54 @@ for loop in range(numLoops):
 				# Formação do pool
 				custoPool = 0
 				caminhosPool[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
+				# print '=============================='
+				# print f.getPool()
+				melhoresCaminhosLocais = {}
+				# print '------------------------------------------'
+				for bli2 in range(500):#cmd.var['t']):
+					# ------------------------------------------------------
+					# Em seguida, encontra o melhor caminho a partir de CADA vertice do pool
+					# print 'inicios', f.getIniciosPool()
+					for inicioPool in f.getIniciosPool():
+						if f.iniciaRotaPool(inicioPool):
 
-				# Somatório custo do Pool
-				custoPool += f.custoAtual
-				# print  caminhosPool[strCidadeInicial].getCusto(), ' ', caminhosPool[strCidadeInicial].getCaminho()
+							# Percorre o caminho pro pool
+							for n in range(0,g.getTamCaminho()):
+								# print 'cidade atual: ', f.getCidadeAtual()
+								f.proximaCidadePool()
+
+							# Adiciona a cidade destino
+							f.ultimaCidadePool()
+							# print 'caminho: ',f.caminhoPool
+							f.calculaRotaPool() # calcula o custo do caminho e colocar
+
+							strInicioPool = str(inicioPool)
+							# print f.custoAtual, ' < ', f.melhoresCaminhosLocais[strInicioPool]
+							if f.custoAtual < f.melhoresCaminhosLocais[strInicioPool]:
+								f.melhoresCaminhosLocais[strInicioPool] =  f.custoAtual
+								melhoresCaminhosLocais[strInicioPool] = Caminho(f.caminhoPool, f.custoAtual, inicioPool)
 				
-				# ------------------------------------------------------
-				# Em seguida, testa-se todos os caminhos a partir dos demais pontos do poool
-				for inicioPool in f.getIniciosPool():
+				# Calcula os custos locais	
+				div = 0
+				for key in melhoresCaminhosLocais:
+					div += melhoresCaminhosLocais[key].getCusto()
+					# print melhoresCaminhosLocais[key].getCusto(), ' ', melhoresCaminhosLocais[key].getCaminho()
 
-					if f.iniciaRotaPool(inicioPool):
+				custoPoolLocal = div / (g.getTamCaminho() + 1)
 
-						# Percorre o caminho pro pool
-						for n in range(0,g.getTamCaminho()):
-							f.proximaCidadePool()
+			# Acrescenda ao valor local do conjunto e pulls
+			custoPoolTotal += custoPoolLocal	
 
-						# Adiciona a cidade destino
-						f.ultimaCidadePool()
-						# print 'caminho: ',f.caminhoPool
-						f.calculaRotaPool() # calcula o custo do caminho e colocar
+			# Guarda os pools encontrados
+			pools.append(Pool(melhoresCaminhosLocais[strInicioPool], custoPoolTotal, f.getPool()))	
 
-						strCidadeInicial = str(inicioPool)
-					
-						caminhosPool[strCidadeInicial] = Caminho(f.caminhoPool, f.custoAtual, inicioPool)
-						# print  caminhosPool[strCidadeInicial].getCusto(), ' ', caminhosPool[strCidadeInicial].getCaminho()
+		# Calcula os resultados encontados do conjunto de pools
+		# print 'custo total: ' , custoPoolTotal
 
-						# Somatório custo do Pool
-						custoPool += f.custoAtual
-
-			# Calcula custos após fazer um caminho para cada saída do pool
-
-			# Custo do Pool final
-			custoPool = custoPool / (g.getTamCaminho() + 1)
-			# print 'custo do pool: ', custoPool
-
-			# Adiciona o pool da lista
-			pools.append(Pool(caminhosPool, custoPool, f.getPool()))
-			
-			# Custo e todos os pools da rodada
-			custoPoolTotal += custoPool
-		
 		if custoPoolTotal < melhorCustoPoolTotal:
 			melhorCustoPoolTotal = custoPoolTotal
 			melhoresPools = list(pools)
-		
-		# Cleaning caminhos
-		# {} instancia um novo dicionario, zerado.
-		# clear() limpa o dicionário, que se for uma referência, continua sendo referência
-		caminhos = {}
-		
+
 	duration = time.time() - start
 
 	# ------------------------------------------
@@ -187,9 +187,13 @@ for loop in range(numLoops):
 		
 	# Melhores pools da rodada
 	melhoresPoolsString = ''.join(['[' , ','.join( map( str, melhoresPoolsFinais) ) , ']'])
+
+	
+	print ' '.join([str(loop), str(melhorCustoPoolTotal), melhoresPoolsString, str(duration)])
+	
 	
 	resultadoCSV.writerow([str(loop), melhorCustoPoolTotal, melhoresPoolsString, str(duration)])
-	print loop, ' [ok!]'
+	
 	# strList = []
 	# for caminho in melhoresCaminhos:
 	# 	#print melhoresCaminhos[caminho].getCaminho()

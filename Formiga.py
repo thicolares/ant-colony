@@ -20,6 +20,7 @@ class Formiga( object ):
 		self.iniciosPool = []
 		self.pool = []
 		self.disponiveisPool = []
+		self.melhoresCaminhosLocais = {}
 
 		self.probabilidades = {}
 		self.grafo = grafo
@@ -100,6 +101,7 @@ class Formiga( object ):
 		# Adiciona cidade escolhida no pool
 		self.pool.append(cidadeJ)
 		self.iniciosPool.append(cidadeJ)
+		self.melhoresCaminhosLocais[str(self.cidadeAtual)] = 999999999
 		# print 'cidade escolhida: ', cidadeJ
 		# Remove a cidade do condjunto de cidades disponiveis
 		self.cidades.remove(cidadeJ)
@@ -182,6 +184,8 @@ class Formiga( object ):
 			self.cidadeAtual = self.cidadeInicial
 			self.cidades.remove(self.cidadeAtual)
 			self.caminho.append(self.cidadeAtual)
+			self.iniciosPool.append(self.cidadeAtual)
+			self.melhoresCaminhosLocais[str(self.cidadeAtual)] = 999999999
 			self.pool.append(self.cidadeAtual)
 			return True
 

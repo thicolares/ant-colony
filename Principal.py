@@ -75,7 +75,7 @@ for loop in range(numLoops):
 	melhorCustoPoolTotal = 9999999999
 
 	start = time.time()
-	for bli in range(1):#cmd.var['t']):
+	for bli in range(cmd.var['t']):
 
 		# Nova formiga
 		f = Formiga(g)
@@ -117,52 +117,63 @@ for loop in range(numLoops):
 				# Primeiro caminho
 				# Formação do pool
 				custoPool = 0
-				caminhosPool[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
+				# caminhosPool[strCidadeInicial] = Caminho(f.caminho, f.custoAtual, f.getCidadeInicial())
 				# print '=============================='
 				# print f.getPool()
 				melhoresCaminhosLocais = {}
+				melhoresCustosLocais = {}
 
 				matriz = {}
 
-				print f.getPool()
+				cDP = f.getPool()
 
-				# # print '------------------------------------------'
-				# for bli2 in range(100):#cmd.var['t']):
-				# 	# ------------------------------------------------------
-				# 	# Em seguida, encontra o melhor caminho a partir de CADA vertice do pool
-				# 	# print 'inicios', f.getIniciosPool()
-				# 	for inicioPool in f.getIniciosPool():
-				# 		if f.iniciaRotaPool(inicioPool):
+				for c1 in range(5):
+					melhorCustoLocal = 99999999
+					visitados = []
+					visitados.append(c1)
+					for c2 in range(5):
+						if c2 not in visitados:
+							visitados.append(c2)
 
-				# 			# Percorre o caminho pro pool
-				# 			for n in range(0,g.getTamCaminho()):
-				# 				# print 'cidade atual: ', f.getCidadeAtual()
-				# 				f.proximaCidadePool()
+							for c3 in range(5):
+								if c3 not in visitados:
+									visitados.append(c3)
 
-				# 			# Adiciona a cidade destino
-				# 			f.ultimaCidadePool()
-				# 			# print 'caminho: ',f.caminhoPool
-				# 			f.calculaRotaPool() # calcula o custo do caminho e colocar
+									for c4 in range(5):
+										if c4 not in visitados:
+											visitados.append(c4)
 
-				# 			strInicioPool = str(inicioPool)
-				# 			# print f.custoAtual, ' < ', f.melhoresCaminhosLocais[strInicioPool]
-				# 			if f.custoAtual < f.melhoresCaminhosLocais[strInicioPool]:
-				# 				f.melhoresCaminhosLocais[strInicioPool] =  f.custoAtual
-				# 				melhoresCaminhosLocais[strInicioPool] = Caminho(f.caminhoPool, f.custoAtual, inicioPool)
-				
+											for c5 in range(5):
+												if c5 not in visitados:
+
+													visitados.append(c5)
+
+													custoLocal = g.peso[cDP[c1]][cDP[c2]] + g.peso[cDP[c2]][cDP[c3]] + g.peso[cDP[c3]][cDP[c4]] + g.peso[cDP[c4]][cDP[c5]] + g.peso[cDP[c5]][0]
+													
+													if custoLocal < melhorCustoLocal:
+														melhorCustoLocal = custoLocal
+														melhoresCaminhosLocais[cDP[c1]] = Caminho(list([cDP[c1],cDP[c2],cDP[c3],cDP[c4],cDP[c5],0]), custoLocal, cDP[c1])
+													visitados.remove(c5)		
+											visitados.remove(c4)
+									visitados.remove(c3)
+							visitados.remove(c2)
+					visitados.remove(c1)
+
 				# Calcula os custos locais	
 				div = 0
 				for key in melhoresCaminhosLocais:
 					div += melhoresCaminhosLocais[key].getCusto()
-					# print melhoresCaminhosLocais[key].getCusto(), ' ', melhoresCaminhosLocais[key].getCaminho()
+					# print '>>>' , melhoresCaminhosLocais[key].getCusto(), ' ', melhoresCaminhosLocais[key].getCaminho()
 
 				custoPoolLocal = div / (g.getTamCaminho() + 1)
+
+				# print custoPoolLocal
 
 			# Acrescenda ao valor local do conjunto e pulls
 			custoPoolTotal += custoPoolLocal	
 
 			# Guarda os pools encontrados
-			pools.append(Pool(melhoresCaminhosLocais[strInicioPool], custoPoolTotal, f.getPool()))	
+			pools.append(Pool(melhoresCaminhosLocais, custoPoolTotal, f.getPool()))	
 
 		# Calcula os resultados encontados do conjunto de pools
 		# print 'custo total: ' , custoPoolTotal

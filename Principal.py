@@ -76,7 +76,7 @@ for loop in range(numLoops):
 
 	start = time.time()
 	for bli in range(cmd.var['t']):
-		print bli
+
 		# Nova formiga
 		f = Formiga(g)
 
@@ -85,7 +85,7 @@ for loop in range(numLoops):
 
 		pools = []
 		custoPoolTotal = 0
-
+		
 		# Para cada cidade restante (disponivel)
 		while f.getCidades():
 
@@ -122,7 +122,7 @@ for loop in range(numLoops):
 				# print f.getPool()
 				melhoresCaminhosLocais = {}
 				# print '------------------------------------------'
-				for bli2 in range(500):#cmd.var['t']):
+				for bli2 in range(100):#cmd.var['t']):
 					# ------------------------------------------------------
 					# Em seguida, encontra o melhor caminho a partir de CADA vertice do pool
 					# print 'inicios', f.getIniciosPool()
@@ -192,7 +192,7 @@ for loop in range(numLoops):
 	print ' '.join([str(loop), str(melhorCustoPoolTotal), melhoresPoolsString, str(duration)])
 	
 	
-	resultadoCSV.writerow([str(loop), melhorCustoPoolTotal, melhoresPoolsString, str(duration)])
+	#resultadoCSV.writerow([str(loop), melhorCustoPoolTotal, melhoresPoolsString, str(duration)])
 	
 	# strList = []
 	# for caminho in melhoresCaminhos:

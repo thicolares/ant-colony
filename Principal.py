@@ -75,7 +75,7 @@ for loop in range(numLoops):
 	melhorCustoPoolTotal = 9999999999
 
 	start = time.time()
-	for bli in range(cmd.var['t']):
+	for bli in range(1):#cmd.var['t']):
 
 		# Nova formiga
 		f = Formiga(g)
@@ -121,29 +121,34 @@ for loop in range(numLoops):
 				# print '=============================='
 				# print f.getPool()
 				melhoresCaminhosLocais = {}
-				# print '------------------------------------------'
-				for bli2 in range(100):#cmd.var['t']):
-					# ------------------------------------------------------
-					# Em seguida, encontra o melhor caminho a partir de CADA vertice do pool
-					# print 'inicios', f.getIniciosPool()
-					for inicioPool in f.getIniciosPool():
-						if f.iniciaRotaPool(inicioPool):
 
-							# Percorre o caminho pro pool
-							for n in range(0,g.getTamCaminho()):
-								# print 'cidade atual: ', f.getCidadeAtual()
-								f.proximaCidadePool()
+				matriz = {}
 
-							# Adiciona a cidade destino
-							f.ultimaCidadePool()
-							# print 'caminho: ',f.caminhoPool
-							f.calculaRotaPool() # calcula o custo do caminho e colocar
+				print f.getPool()
 
-							strInicioPool = str(inicioPool)
-							# print f.custoAtual, ' < ', f.melhoresCaminhosLocais[strInicioPool]
-							if f.custoAtual < f.melhoresCaminhosLocais[strInicioPool]:
-								f.melhoresCaminhosLocais[strInicioPool] =  f.custoAtual
-								melhoresCaminhosLocais[strInicioPool] = Caminho(f.caminhoPool, f.custoAtual, inicioPool)
+				# # print '------------------------------------------'
+				# for bli2 in range(100):#cmd.var['t']):
+				# 	# ------------------------------------------------------
+				# 	# Em seguida, encontra o melhor caminho a partir de CADA vertice do pool
+				# 	# print 'inicios', f.getIniciosPool()
+				# 	for inicioPool in f.getIniciosPool():
+				# 		if f.iniciaRotaPool(inicioPool):
+
+				# 			# Percorre o caminho pro pool
+				# 			for n in range(0,g.getTamCaminho()):
+				# 				# print 'cidade atual: ', f.getCidadeAtual()
+				# 				f.proximaCidadePool()
+
+				# 			# Adiciona a cidade destino
+				# 			f.ultimaCidadePool()
+				# 			# print 'caminho: ',f.caminhoPool
+				# 			f.calculaRotaPool() # calcula o custo do caminho e colocar
+
+				# 			strInicioPool = str(inicioPool)
+				# 			# print f.custoAtual, ' < ', f.melhoresCaminhosLocais[strInicioPool]
+				# 			if f.custoAtual < f.melhoresCaminhosLocais[strInicioPool]:
+				# 				f.melhoresCaminhosLocais[strInicioPool] =  f.custoAtual
+				# 				melhoresCaminhosLocais[strInicioPool] = Caminho(f.caminhoPool, f.custoAtual, inicioPool)
 				
 				# Calcula os custos locais	
 				div = 0

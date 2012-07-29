@@ -66,17 +66,19 @@ class Grafo( object ):
 		"""
 		Carrega os dados na estrutura do grafo		
 		"""
-		arquivo = open(self.entrada, "r")
+		arquivo = open(''.join(["GRAPHS/", self.entrada, "/", self.entrada, "_03_weight_graphs.txt"]), "r")
 		linha = arquivo.readline()
 		self.qtd_nos = int(linha.split(" ")[0])
 
-		for p in range( 0, self.qtd_nos):
-			for p in range( 0, self.qtd_nos):
+		for p1 in range( 0, self.qtd_nos):
+			for p2 in range( 0, self.qtd_nos):
 				linha = arquivo.readline()
 				itens = linha.split(" ")
+				print p1, ' ', p2
+				print itens
 				no1 = int(itens[0])
 				no2 = int(itens[1])
-				peso = int(itens[2])
+				peso = float(itens[2])
 				
 				if not self.peso.has_key(no1):
 					self.peso[no1] 			= {}

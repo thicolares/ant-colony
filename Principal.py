@@ -24,6 +24,7 @@ import copy
 import csv
 
 #Arquivos
+from NumerosAleatorios import *
 from Grafo import *
 from Formiga import *
 from Caminho import *
@@ -41,6 +42,23 @@ numLoops = cmd.var['N']
 # Criando o grafo
 g = Grafo(cmd.var)
 g.carregaGrafo()
+
+# # Estrura que armaneza as formigas
+# formigas = []
+
+# # TODO acochambra
+# cidadesDisponiveis = []
+# for i in range(0,g.getQtdNos()):
+# 	cidadesDisponiveis.append(i)
+
+# # Gerador de numeros aleatorios sem repeticao
+# num = NumerosAleatorios(g.getQtdNos())
+
+# # Distribuição das formigas - cada um vai para uma cidade diferente
+# for i in range(0,g.getQtdNos()):
+# 	cidadeInicial = num.numero()
+# 	f = Formiga(g,cidadeInicial)
+# 	formigas.append(f)
 
 # Criando os arquivos CVS para os resultados
 resultadoCSV = csv.writer(open(''.join([cmd.var['GRAFO'],"_",str(numLoops),"_",str(cmd.var['t']),".csv"]), "wb"))
@@ -182,6 +200,13 @@ for loop in range(numLoops):
 			melhorCustoPoolTotal = custoPoolTotal
 			melhoresPools = list(pools)
 
+		# Deposita feromônios
+		# print g.getQtdNos()
+		# for k in range(g.getQtdNos()):
+		# 	formigas[k].calculaDeltaTij()
+		f.calculaDeltaTij()
+		g.depositaFeromonio()
+
 	duration = time.time() - start
 
 	# ------------------------------------------
@@ -208,7 +233,7 @@ for loop in range(numLoops):
 	print ' '.join([str(loop), str(melhorCustoPoolTotal), melhoresPoolsString, str(duration)])
 	
 	
-	#resultadoCSV.writerow([str(loop), melhorCustoPoolTotal, melhoresPoolsString, str(duration)])
+	resultadoCSV.writerow([str(loop), melhorCustoPoolTotal, melhoresPoolsString, str(duration)])
 	
 	# strList = []
 	# for caminho in melhoresCaminhos:

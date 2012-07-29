@@ -5,7 +5,7 @@ class Pool( object ):
 
 	# na inicialização recebe as cidades
 	# retira das cidades a inicial
-	def __init__( self, caminhos = {}, custo = 99999999, pool = []):
+	def __init__( self, caminhos = {}, custo = 0, pool = []):
 		self.__caminhos = caminhos # array de vertices
 		self.__custo = custo
 		self.__pool = pool
@@ -22,7 +22,7 @@ class Pool( object ):
 		return self.__caminhos
 
 	def calculeMelhorCaminho( self ):
-		melhorCusto = 999999999
+		melhorCusto = 0
 		piorCusto = 0
 		melhorIndex = 0
 		for index in self.__caminhos:

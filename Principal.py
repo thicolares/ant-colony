@@ -82,15 +82,15 @@ for loop in range(numLoops):
 		formigasElitistas.append(fE)
 
 	# Resultados
-	menorCusto 		= 0
+	menorCusto 		= 9999999999
 	menorCaminho	= []
 
 	melhoresCaminhos = {}
 	
-	melhorCustoTotal = 0
+	melhorCustoTotal = 9999999999
 
 	melhoresPools = []
-	melhorCustoPoolTotal = 0
+	melhorCustoPoolTotal = 9999999999
 
 	start = time.time()
 	for bli in range(cmd.var['t']):
@@ -146,7 +146,7 @@ for loop in range(numLoops):
 				cDP = f.getPool()
 
 				for c1 in range(5):
-					melhorCustoLocal = 0
+					melhorCustoLocal = 99999999
 					visitados = []
 					visitados.append(c1)
 					for c2 in range(5):
@@ -168,7 +168,7 @@ for loop in range(numLoops):
 
 													custoLocal = g.peso[cDP[c1]][cDP[c2]] + g.peso[cDP[c2]][cDP[c3]] + g.peso[cDP[c3]][cDP[c4]] + g.peso[cDP[c4]][cDP[c5]] + g.peso[cDP[c5]][0]
 													
-													if custoLocal > melhorCustoLocal:
+													if custoLocal < melhorCustoLocal:
 														melhorCustoLocal = custoLocal
 														melhoresCaminhosLocais[cDP[c1]] = Caminho(list([cDP[c1],cDP[c2],cDP[c3],cDP[c4],cDP[c5],0]), custoLocal, cDP[c1])
 													visitados.remove(c5)		
@@ -196,7 +196,7 @@ for loop in range(numLoops):
 		# Calcula os resultados encontados do conjunto de pools
 		# print 'custo total: ' , custoPoolTotal
 
-		if custoPoolTotal > melhorCustoPoolTotal:
+		if custoPoolTotal < melhorCustoPoolTotal:
 			melhorCustoPoolTotal = custoPoolTotal
 			melhoresPools = list(pools)
 

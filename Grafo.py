@@ -74,8 +74,6 @@ class Grafo( object ):
 			for p2 in range( 0, self.qtd_nos):
 				linha = arquivo.readline()
 				itens = linha.split(" ")
-				print p1, ' ', p2
-				print itens
 				no1 = int(itens[0])
 				no2 = int(itens[1])
 				peso = float(itens[2])
